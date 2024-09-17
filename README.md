@@ -1,3 +1,3 @@
 # webrtc
 
-A new Flutter project.
+A Real Time Flutter Audio and Video Calling App
