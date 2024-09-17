@@ -20,7 +20,7 @@ class StartupView extends StackedView<StartupViewModel> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              'STACKED',
+              'RTC Video Call App',
               style: TextStyle(fontSize: 40, fontWeight: FontWeight.w900),
             ),
             Row(
@@ -51,6 +51,8 @@ class StartupView extends StackedView<StartupViewModel> {
       StartupViewModel();
 
   @override
-  void onViewModelReady(StartupViewModel viewModel) => SchedulerBinding.instance
-      .addPostFrameCallback((timeStamp) => viewModel.runStartupLogic());
+  void onViewModelReady(StartupViewModel viewModel) =>
+      SchedulerBinding.instance.addPostFrameCallback(
+        (timeStamp) => viewModel.runStartupLogic(),
+      );
 }

@@ -1,36 +1,56 @@
-import 'package:webrtc/app/app.bottomsheets.dart';
-import 'package:webrtc/app/app.dialogs.dart';
-import 'package:webrtc/app/app.locator.dart';
-import 'package:webrtc/ui/common/app_strings.dart';
+import 'package:flutter/material.dart';
+// import 'package:webrtc/app/app.locator.dart';
+// import 'package:webrtc/app/app.router.dart';
+import 'package:webrtc/services/signalling_service.dart';
 import 'package:stacked/stacked.dart';
-import 'package:stacked_services/stacked_services.dart';
+// import 'package:stacked_services/stacked_services.dart';
+import 'package:webrtc/ui/views/callscreen/callscreen_view.dart';
 
 class HomeViewModel extends BaseViewModel {
-  final _dialogService = locator<DialogService>();
-  final _bottomSheetService = locator<BottomSheetService>();
+  // final _navigationService = locator<NavigationService>();
+  dynamic _incomingSDPOffer;
+  final String _selfCallerId;
+  final TextEditingController remoteCallerIdTextEditingController =
+      TextEditingController();
 
-  String get counterLabel => 'Counter is: $_counter';
+  HomeViewModel(this._selfCallerId);
 
-  int _counter = 0;
+  dynamic get incomingSDPOffer => _incomingSDPOffer;
+  String get selfCallerId => _selfCallerId;
 
-  void incrementCounter() {
-    _counter++;
-    rebuildUi();
+  void initialize() {
+  listenForIncomingCalls();
+}
+
+  // Listen for incoming video calls
+  void listenForIncomingCalls() {
+    SignallingService.instance.socket!.on("newCall", (data) {
+      _incomingSDPOffer = data;
+      notifyListeners();
+    });
   }
 
-  void showDialog() {
-    _dialogService.showCustomDialog(
-      variant: DialogType.infoAlert,
-      title: 'Stacked Rocks!',
-      description: 'Give stacked $_counter stars on Github',
+  // Method to handle joining the call
+  void joinCall({
+    required BuildContext context,
+    required String calleeId,
+    dynamic offer,
+  }) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => CallscreenView(
+          callerId: selfCallerId,
+          calleeId: calleeId,
+          offer: offer,
+        ),
+      ),
     );
   }
 
-  void showBottomSheet() {
-    _bottomSheetService.showCustomSheet(
-      variant: BottomSheetType.notice,
-      title: ksHomeBottomSheetTitle,
-      description: ksHomeBottomSheetDescription,
-    );
+// Method to reject incoming calls
+  void rejectCall() {
+    _incomingSDPOffer = null;
+    notifyListeners();
   }
 }

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:webrtc/app/app.bottomsheets.dart';
 import 'package:webrtc/app/app.dialogs.dart';
@@ -25,6 +27,10 @@ class MainApp extends StatelessWidget {
       navigatorObservers: [
         StackedService.routeObserver,
       ],
+      darkTheme: ThemeData.dark().copyWith(
+        colorScheme: const ColorScheme.dark(),
+      ),
+      themeMode: ThemeMode.dark,
     );
   }
 }
